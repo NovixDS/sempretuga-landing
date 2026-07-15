@@ -119,6 +119,10 @@
     text-align:center;padding:clamp(40px,6vw,70px) 0 30px;
     font-size:12px;color:var(--cream-dim);letter-spacing:.04em;
   }
+  footer .assinatura{
+    font-family:var(--serif);font-weight:500;font-size:clamp(15px,1.6vw,18px);
+    color:var(--cream);letter-spacing:.02em;margin-bottom:10px;
+  }
 </style>
 </head>
 <body>
@@ -153,7 +157,10 @@
     </li>
   </ul>
 </main>
-<footer>Pas de spam, juste a malta. Désinscription en un clic.</footer>
+<footer>
+  <p class="assinatura">Par des Portugais, pour des Portugais.</p>
+  <p>Pas de spam, juste a malta. Désinscription en un clic.</p>
+</footer>
 <script>
   // Titre : la largeur du TEXTE de chaque ligne est mesurée via Range (précis au pixel),
   // puis la ligne est remise à l'échelle pour occuper la largeur de la colonne (maquette).
