@@ -194,12 +194,33 @@
       if(Math.abs(w-lastW)>0.5){ lastW=w; queueFit(); }
     }).observe(document.getElementById('title'));
   }
-  // ⚠️ GARDE-FOU : formulaire pas encore branché à MailerLite (groupe malta-waitlist).
-  // Une fois le snippet « Embedded form » fourni : remplacer ce handler par le POST
-  // vers l'URL d'action MailerLite + afficher .done / masquer le form au succès.
+  // ── Envoi MailerLite (groupe malta-waitlist) ─────────────────────────────
+  // ML_ENDPOINT = l'URL d'action du formulaire MailerLite, format :
+  //   https://assets.mailerlite.com/jsonp/XXXXXX/forms/YYYYYYYYYYYY/subscribe
+  // (extraite du snippet « Embedded form » ou du code source de la page MailerLite publiée).
+  // ⚠️ TANT QUE C'EST VIDE, le formulaire est verrouillé (garde-fou anti-perte de leads).
+  var ML_ENDPOINT = '';
   document.getElementById('waitlist').addEventListener('submit', function(e){
     e.preventDefault();
-    alert('Formulaire pas encore branché à MailerLite — voir le commentaire en tête de fichier.');
+    var form=this, btn=form.querySelector('button'), done=document.querySelector('.done');
+    if(!ML_ENDPOINT){
+      alert('Formulaire pas encore branché à MailerLite — ML_ENDPOINT vide (voir commentaire).');
+      return;
+    }
+    var email=form.email.value.trim();
+    if(!email) return;
+    btn.disabled=true; btn.textContent='…';
+    var data=new FormData(); data.append('fields[email]', email);
+    fetch(ML_ENDPOINT,{method:'POST',body:data})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j && j.success){ form.style.display='none'; done.style.display='block'; }
+        else { throw new Error('reponse inattendue'); }
+      })
+      .catch(function(){
+        btn.disabled=false; btn.textContent='És dos nossos';
+        alert("Ça n'a pas marché — réessaie dans un instant.");
+      });
   });
 </script>
 </body>
