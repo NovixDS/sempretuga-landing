@@ -167,6 +167,8 @@
   fitTitle();
   window.addEventListener('resize',queueFit);
   window.addEventListener('load',queueFit);
+  window.addEventListener('pageshow',queueFit);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden){ fitTitle(); queueFit(); } });
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(queueFit);
   if(window.ResizeObserver){ // filet : refit sur TOUT changement de largeur (rotation, split-screen…)
     var lastW=0;
