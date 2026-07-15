@@ -156,15 +156,22 @@
       if(w>0) s.style.fontSize=(100*t.clientWidth/w*0.99)+'px';
     });
   }
+  // double rAF : on mesure APRÈS que le layout soit stabilisé (une mesure prise pendant
+  // une transition de viewport renvoie des valeurs transitoires fausses)
+  var rafFit;
+  function queueFit(){
+    cancelAnimationFrame(rafFit);
+    rafFit=requestAnimationFrame(function(){ requestAnimationFrame(fitTitle); });
+  }
   fitTitle();
-  window.addEventListener('resize',fitTitle);
-  window.addEventListener('load',fitTitle);
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
+  window.addEventListener('resize',queueFit);
+  window.addEventListener('load',queueFit);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(queueFit);
   if(window.ResizeObserver){ // filet : refit sur TOUT changement de largeur (rotation, split-screen…)
     var lastW=0;
     new ResizeObserver(function(en){
       var w=en[0].contentRect.width;
-      if(Math.abs(w-lastW)>0.5){ lastW=w; fitTitle(); }
+      if(Math.abs(w-lastW)>0.5){ lastW=w; queueFit(); }
     }).observe(document.getElementById('title'));
   }
   // ⚠️ GARDE-FOU : formulaire pas encore branché à MailerLite (groupe malta-waitlist).
