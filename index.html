@@ -198,8 +198,8 @@
   // ML_ENDPOINT = l'URL d'action du formulaire MailerLite, format :
   //   https://assets.mailerlite.com/jsonp/XXXXXX/forms/YYYYYYYYYYYY/subscribe
   // (extraite du snippet « Embedded form » ou du code source de la page MailerLite publiée).
-  // ⚠️ TANT QUE C'EST VIDE, le formulaire est verrouillé (garde-fou anti-perte de leads).
-  var ML_ENDPOINT = '';
+  // Formulaire « Malta-Waitlist » (créé 16/07) — compte 2469245, double opt-in actif.
+  var ML_ENDPOINT = 'https://dashboard.mailerlite.com/jsonp/2469245/forms/193103344609265383/subscribe';
   document.getElementById('waitlist').addEventListener('submit', function(e){
     e.preventDefault();
     var form=this, btn=form.querySelector('button'), done=document.querySelector('.done');
