@@ -156,12 +156,13 @@
       if(w>0) s.style.fontSize=(100*t.clientWidth/w*0.99)+'px';
     });
   }
-  // double rAF : on mesure APRÈS que le layout soit stabilisé (une mesure prise pendant
-  // une transition de viewport renvoie des valeurs transitoires fausses)
-  var rafFit;
+  // refit différé par setTimeout (PAS requestAnimationFrame : jamais exécuté dans un onglet
+  // en arrière-plan) — double tir : réponse rapide + mesure après stabilisation du layout
+  var tFit1,tFit2;
   function queueFit(){
-    cancelAnimationFrame(rafFit);
-    rafFit=requestAnimationFrame(function(){ requestAnimationFrame(fitTitle); });
+    clearTimeout(tFit1); clearTimeout(tFit2);
+    tFit1=setTimeout(fitTitle,50);
+    tFit2=setTimeout(fitTitle,300);
   }
   fitTitle();
   window.addEventListener('resize',queueFit);
