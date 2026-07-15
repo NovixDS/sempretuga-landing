@@ -22,20 +22,20 @@
     --sans:'Archivo',sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
+  html,body{overflow-x:clip}
   body{
     background:var(--bg);
     color:var(--cream);
     font-family:var(--sans);
     font-weight:300;
     min-height:100vh;
-    overflow-x:hidden;
   }
   .wrap{max-width:1100px;margin:0 auto;padding:0 clamp(18px,4.5vw,48px);container-type:inline-size}
   /* ── logo ─────────────────────────────────────────── */
   header{display:flex;justify-content:center;padding:clamp(26px,4vw,44px) 0;position:relative;z-index:2} /* même espace au-dessus et en-dessous du logo */
   header img{width:clamp(150px,18vw,230px);height:auto;display:block}
   /* ── photo de la bande ───────────────────────────── */
-  .band{position:relative}
+  .band{position:relative;max-width:1240px;margin:0 auto} /* cap desktop : la photo ne devient jamais un mur */
   .band::before{ /* halo vert du studio derrière la bande */
     content:"";position:absolute;inset:-8% -20% 0;z-index:0;pointer-events:none;
     background:radial-gradient(60% 55% at 50% 38%, var(--glow), transparent 70%);
@@ -142,18 +142,21 @@
 </main>
 <footer>Pas de spam, juste a malta. Désinscription en un clic.</footer>
 <script>
-  // Titre : chaque ligne est mesurée à taille fixe puis remise à l'échelle pour occuper
-  // EXACTEMENT la largeur de la colonne (centrage parfait, 2 lignes garanties, comme la maquette).
+  // Titre : chaque ligne est mesurée en inline-block (= largeur réelle du TEXTE, pas du bloc)
+  // puis remise à l'échelle pour occuper exactement la largeur de la colonne, comme la maquette.
   function fitTitle(){
-    document.querySelectorAll('#title span').forEach(function(s){
+    var t=document.getElementById('title');
+    t.querySelectorAll('span').forEach(function(s){
+      s.style.display='inline-block';   // shrink-to-fit : la boîte = le texte
       s.style.fontSize='100px';
       var w=s.getBoundingClientRect().width;
-      var avail=s.parentElement.clientWidth;
-      if(w>0) s.style.fontSize=(100*avail/w*0.995)+'px';
+      s.style.display='block';
+      if(w>0) s.style.fontSize=(100*t.clientWidth/w*0.99)+'px';
     });
   }
   fitTitle();
   window.addEventListener('resize',fitTitle);
+  window.addEventListener('load',fitTitle);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitle);
   // ⚠️ GARDE-FOU : formulaire pas encore branché à MailerLite (groupe malta-waitlist).
   // Une fois le snippet « Embedded form » fourni : remplacer ce handler par le POST
